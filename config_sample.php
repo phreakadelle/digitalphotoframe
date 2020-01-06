@@ -10,7 +10,7 @@ use swa\digitalphotoframe\lib\Config;
 Config::write("gallery_name", "Titel");
 
 
-Config::write("image_url", "https://domain.tld/image.php");
+Config::write("image_url", "https://domain.tld/index.php");
 Config::write("mail_host", "{domain.tld:993/imap/ssl}INBOX");
 Config::write("mail_user", "user");
 Config::write("mail_password", "password");
