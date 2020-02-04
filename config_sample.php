@@ -22,3 +22,8 @@ Config::write("image_known_senders", array( "Foo Bar <foo@domain.tld>" => "Mr. F
 Config::write("mail_image_directory_current", "images/");
 Config::write("mail_image_directory_archive", "archive/");
 Config::write("mail_image_ignore_fileformats", array("avi", "mpg", "mpeg", "mov", "png"));
+
+
+Config::write("calendar_frequence", 5);
+// Google Calendar iFrame URL
+Config::write("calendar_iframe_url", "");
