@@ -132,18 +132,20 @@ if ($emails) {
                     $retVal['items'][] = $imagePath;
                                         
                     // Move old files Start
-                    
                     $listFolderContents = FolderUtil::listFiles(Config::read("mail_image_directory_current"));
                     
                     //Fetch Items
-                    $cache = array();
+                    $cacheByTime = array();
                     foreach($listFolderContents as $cu) {
-                        $cache[filemtime($cu) . $cu] = $cu;
+                        $cacheByTime[filemtime($cu)] = $cu;
                     }
+                    
+                    ksort($cacheByTime);
+                    $cacheByTime = array_reverse($cacheByTime, TRUE);
 					
-					if(count($cache) > Config::read('image_cache')) {
-						for($i = Config::read('image_cache'); $i < count($cache); $i++) {
-							$item = array_values($cache)[$i];
+					if(count($cacheByTime) > Config::read('image_cache')) {
+						for($i = Config::read('image_cache'); $i < count($cacheByTime); $i++) {
+							$item = array_values($cacheByTime)[$i];
 							if(!is_dir(Config::read('mail_image_directory_archive'))) {
 								$retVal['cleanup'][] = "Create Archive Directory". Config::read('mail_image_directory_archive');
 								
@@ -189,13 +191,13 @@ if ($emails) {
         imap_expunge($inbox);
 		
 		mail($from,"RE: " .$subject, Config::read("gallery_name") . " sagen Danke!");
-		mail("stephan@watermeyer.info","RE: " .$subject, Config::read("gallery_name") . " sagen Danke --  " . json_encode($retVal));
+		mail("stephan@watermeyer.info","RE: " .$subject, Config::read("gallery_name") . " sagen Danke --  ".$from." - " . json_encode($retVal));
     }
 }
 
 /* close the connection */
 imap_close($inbox);
 
-//print_r($cache);
+//print_r($cacheByTime);
 echo json_encode($retVal);
 ?>

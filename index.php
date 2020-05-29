@@ -8,13 +8,10 @@ use swa\digitalphotoframe\lib\Config;
 use swa\digitalphotoframe\lib\FolderUtil;
 
 $current = isset($_GET['current']) && is_numeric($_GET['current']) ? $_GET['current'] : -1;
-$paramCalendar = isset($_GET['calendar']) ? boolval($_GET['calendar']) : false;
 $files = FolderUtil::listFiles(Config::read("mail_image_directory_current"));
 
 $next = $current;
-if($paramCalendar == true) {
-    $next = $current;
-} else if($current == -1) {
+if($current == -1) {
 	$next = rand(0, count($files) -1);
 } else if($next >= 0) {
 	$next++; // next image
@@ -56,8 +53,7 @@ if(file_exists(Config::read("image_subject_file"))) {
 	fclose($file);
 }
 
-$showCalendar = $next % Config::read("calendar_frequence") == 0 && $paramCalendar == false;
-$nextURL = Config::read("image_url") . "?current=" . $next ."&calendar=".$showCalendar;
+$nextURL = Config::read("image_url") . "?current=" . $next
 
 ?>
 
@@ -119,12 +115,7 @@ h1.error {
 <?php } ?>
 
 <?php
-if($paramCalendar == true) {
-    ?>
-    <iframe src="<?php echo Config::read("calendar_iframe_url"); ?>" style="border-width:0" width="1024" height="768" frameborder="0" scrolling="no"></iframe>
-    <?
-    echo "<br>\<a href=\"".$nextURL."\">N&auml;chstes Bild</a>";
-} elseif ($theImage != "") {
+if ($theImage != "") {
 	echo "<a href=\"".$nextURL."\"><img src=\"".$theImage."\" /></a>";
 } else {
 	echo "<h1 class=\"error\">No Picture found in ".Config::read("mail_image_directory_current")."</h1>";
