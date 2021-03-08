@@ -26,7 +26,7 @@ class FolderUtil {
 				}
 			
 				if(is_dir($dir.'/'.$ff)) {
-					$retVal = array_merge($retVal, listFolderFiles($dir.'/'.$ff, $currentFileExt));
+					//$retVal = array_merge($retVal, listFiles($dir.'/'.$ff, $currentFileExt));
 				}
 			}
 		}

@@ -27,3 +27,6 @@ Config::write("mail_image_ignore_fileformats", array("avi", "mpg", "mpeg", "mov"
 Config::write("calendar_frequence", 5);
 // Google Calendar iFrame URL
 Config::write("calendar_iframe_url", "");
+
+Config::write("google_calendar_id", "xyz@group.calendar.google.com");
+Config::write("google_calendar_tokenfile", "google_calendar_token.json");

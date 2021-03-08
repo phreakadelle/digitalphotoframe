@@ -11,18 +11,34 @@ $current = isset($_GET['current']) && is_numeric($_GET['current']) ? $_GET['curr
 $files = FolderUtil::listFiles(Config::read("mail_image_directory_current"));
 
 $next = $current;
-if($current == -1) {
-	$next = rand(0, count($files) -1);
-} else if($next >= 0) {
-	$next++; // next image
-	if(count($files) <= $next) {
-		$next = 0;
-	}
+
+$showCalendar = isset($_GET['showCalendar']) && $_GET['showCalendar'] == "true";
+
+if($showCalendar) {
+    $theImage = "google_calendar_to_image.php";
 } else {
-	$next = 0;
+    if($current == -1) {
+        $next = rand(0, count($files) -1);
+        $next = $next;
+    } else if($next >= 0) {
+        $next++; // next image
+        if(count($files) <= $next) {
+            $next = 0;
+        }
+    } else {
+        $next = 0;
+    }
+    
+    $theImage = $files[$next];
 }
 
-$theImage = $files[$next];
+
+
+if($next % 5 == $showCalendar) {
+    $showCalendar = "true";
+} else {
+    $showCalendar = "false";
+}
 
 setlocale(LC_TIME, Config::read("image_locale"));
 
@@ -53,7 +69,7 @@ if(file_exists(Config::read("image_subject_file"))) {
 	fclose($file);
 }
 
-$nextURL = Config::read("image_url") . "?current=" . $next
+$nextURL = Config::read("image_url") . "?current=" . $next ."&showCalendar=".$showCalendar;
 
 ?>
 
