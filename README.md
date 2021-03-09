@@ -19,6 +19,23 @@ Dedicated Mail Account to retrieve the Images.
 The "mailimport.php" should be executed via Cronjob to import the mails on a frequent basis. 
 It also does the housekeeping and moves old items to a different folder.
 
+## Google Calendar Integration
+
+- You need to create a Service Account in the "Google Developer Console". Not OAuth 2.0!
+- Download the JSON files containing the credentials from the Developer Console
+- Copy the email address of that service account (xyz@sincere-hybrid-148116.iam.gserviceaccount.com) and grant permission to the Google Calendar you would like to view. This can be done inside "Gooogle Calendar".
+- You need to obtain a copy of the Google API Client and put it in the root directory: https://github.com/googleapis/google-api-php-client
+-- root
+--- src
+---- aliases.php
+---- ....
+--- vendor
+---- autoload.php
+---- ....
+--- lib
+--- archive
+--- index.php
+
 # History
 The first version of this script was based on mre/unicorn lib, which i've forked and published here:
 * https://github.com/phreakadelle/unicorn
