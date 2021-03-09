@@ -4,6 +4,7 @@ use swa\digitalphotoframe\lib\Config;
 
 require __DIR__ . '/vendor/autoload.php';
 
+// For strftime
 setlocale (LC_ALL, 'de_DE');
 
 // Get the API client and construct the service object.
@@ -27,17 +28,16 @@ $events = $results->getItems();
 
 // Create the image
 $im = imagecreate(800, 600);
-
-// White background, blue text
 $bg = imagecolorallocate($im, 255, 255, 255);
 $textcolor = imagecolorallocate($im, 0, 0, 0);
 
 $counter = 5;
 if (empty($events)) {
-    print "No upcoming events found.\n";
+    imagestring($im, 15, 5, $counter, "Keine Termine im Kalender", $textcolor);
 } else {
     foreach ($events as $event) {
         
+        // All Day Events or time based events?
         if($event->getStart()->getDate() != null) {
             $time = strtotime($event->getStart()->getDate());
             $theDate = strftime ("%A, %d.%m.%Y den ganzen Tag", $time);    
@@ -45,12 +45,15 @@ if (empty($events)) {
             $time = strtotime($event->getStart()->getDateTime());
             $theDate = strftime ("%A, %d.%m.%Y um %H:%M Uhr", $time);
         }
-        // Heute?
+        // Today?
         if(strpos($theDate, date("d.m.Y"))) {
             $theDate = "Heute, ". $theDate;
         }
+        
+        // Print the String
         imagestring($im, 15, 5, $counter, $theDate ." - " . $event->getSummary(), $textcolor);
-        $counter += 25;
+        
+        $counter += 25; // line spacing
     }
 }
 
