@@ -27,39 +27,56 @@ $results = $service->events->listEvents(Config::read("google_calendar_id"), $opt
 $events = $results->getItems();
 
 // Create the image
-$im = imagecreate(800, 600);
-$bg = imagecolorallocate($im, 255, 255, 255);
-$textcolor = imagecolorallocate($im, 0, 0, 0);
 
-$counter = 5;
+$im = imagecreatetruecolor(800, 600);
+
+// Create some colors
+$white = imagecolorallocate($im, 255, 255, 255);
+$black = imagecolorallocate($im, 0, 0, 0);
+imagefilledrectangle($im, 0, 0, 800, 600, $white);
+
+$font = 'arial.ttf';
+$fontBold = 'arial_bold.ttf';
+
+$lineSpacing = 0;
+$lastDay = "";
 if (empty($events)) {
-    imagestring($im, 15, 5, $counter, "Keine Termine im Kalender", $textcolor);
+    imagettftext($im, 12, 0, 10, $lineSpacing, $black, $fontBold, "Keine Termine gefunden");
 } else {
     foreach ($events as $event) {
         
         // All Day Events or time based events?
         if($event->getStart()->getDate() != null) {
             $time = strtotime($event->getStart()->getDate());
-            $theDate = strftime ("%A, %d.%m.%Y den ganzen Tag", $time);    
+            $theDate = strftime ("%A, %d.%m.%Y", $time);    
+            $time = "den ganzen Tag";
         } else  {
             $time = strtotime($event->getStart()->getDateTime());
-            $theDate = strftime ("%A, %d.%m.%Y um %H:%M Uhr", $time);
+            $theDate = strftime ("%A, %d.%m.%Y", $time);
+            $time = strftime ("%H:%M Uhr", $time);
         }
+        
         // Today?
         if(strpos($theDate, date("d.m.Y"))) {
             $theDate = "Heute, ". $theDate;
         }
         
-        // Print the String
-        imagestring($im, 15, 5, $counter, $theDate ." - " . $event->getSummary(), $textcolor);
+        // Print a Headline
+        if($lastDate != $theDate) {
+            $lineSpacing += 50;
+            imagettftext($im, 12, 0, 10, $lineSpacing, $black, $fontBold, $theDate);
+        }
         
-        $counter += 25; // line spacing
+        $lineSpacing += 25; // line spacing
+        
+        // Print the String
+        imagettftext($im, 12, 0, 10, $lineSpacing, $black, $font, $time ." - ". $event->getSummary());
+        
+        $lastDate = $theDate;
     }
 }
 
 header('Content-type: image/png');
-
 imagepng($im);
 imagedestroy($im);
- 
 ?>
